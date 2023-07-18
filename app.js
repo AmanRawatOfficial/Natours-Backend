@@ -8,14 +8,12 @@ const app = express();
 
 //* 1) Middlewares
 app.use(express.json());
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development') {
+    app.use(morgan('dev'));
+}
 app.use(express.static(`${__dirname}/public`));
-app.use((req, res, next) => {
-    console.log('Hello from the middleware 🙂');
-    next();
-});
 
-//* 3) Routes
+//* 2) Routes
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 
