@@ -1,18 +1,4 @@
-const fs = require('fs');
-
-const tours = JSON.parse(
-    fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
-);
-
-function checkID(req, res, next, val) {
-    if (req.params.id >= tours.length || req.params.id < 0) {
-        return res.status(404).json({
-            status: 'fail',
-            message: 'Invalid ID',
-        });
-    }
-    next();
-}
+const Tour = require('./../models/tourModel');
 
 function checkBody(req, res, next) {
     const { name, price } = req.body;
@@ -28,41 +14,29 @@ function checkBody(req, res, next) {
 function getAllTours(req, res) {
     res.status(200).json({
         status: 'success',
-        results: tours.length,
-        data: {
-            tours,
-        },
+        // results: tours.length,
+        // data: {
+        //     tours,
+        // },
     });
 }
 
 function getTour(req, res) {
-    const tour = tours.find((tour) => tour.id === Number(req.params.id));
     res.status(200).json({
         status: 'success',
-        data: {
-            tour,
-        },
+        // data: {
+        //     tour,
+        // },
     });
 }
 
 function createTour(req, res) {
-    const newTourId = tours.length;
-    const newTour = Object.assign({ id: newTourId }, req.body);
-
-    tours.push(newTour);
-
-    fs.writeFile(
-        `${__dirname}/dev-data/data/tours-simple.json`,
-        JSON.stringify(tours),
-        (err) => {
-            res.status(201).json({
-                status: 'success',
-                data: {
-                    tour: newTour,
-                },
-            });
-        }
-    );
+    res.status(201).json({
+        status: 'success',
+        // data: {
+        //     tour: newTour,
+        // },
+    });
 }
 
 function updateTour(req, res) {
@@ -87,6 +61,5 @@ module.exports = {
     createTour,
     updateTour,
     deleteTour,
-    checkID,
     checkBody,
 };
