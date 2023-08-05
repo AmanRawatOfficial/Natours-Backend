@@ -137,6 +137,12 @@ tourSchema.pre('save', function (next) {
 //     next();
 // });
 
+tourSchema.virtual('reviews', {
+    ref: 'Review',
+    foreignField: 'tour',
+    localField: '_id',
+});
+
 //* Query Middleware
 tourSchema.pre(/^find/, function (next) {
     this.find({ secretTour: { $ne: true } });
