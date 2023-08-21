@@ -1,5 +1,5 @@
 const Review = require('../models/reviewModel');
-const factory = require('./factoryHandler');
+const factory = require('./handlerFactory');
 
 exports.setTourUserIds = (req, res, next) => {
     // allowing nested routes
