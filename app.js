@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 
@@ -16,10 +17,17 @@ const hpp = require('hpp');
 
 const app = express();
 
-// 1) MIDDLEWARES
+app.set('view engine', 'pug');
+app.set('views', path.join(__dirname, 'views'), './views');
 
+// 1) MIDDLEWARES
+// serving static files
+app.use(express.static(path.join(__dirname, 'public')));
+
+// set security http headers
 app.use(helmet());
 
+// dev logger
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
@@ -50,7 +58,6 @@ app.use(
         ],
     })
 );
-app.use(express.static(`${__dirname}/public`));
 
 app.use((req, res, next) => {
     req.requestTime = new Date().toISOString();
@@ -58,6 +65,25 @@ app.use((req, res, next) => {
 });
 
 // 3) ROUTES
+app.get('/', (req, res) => {
+    res.status(200).render('base', {
+        tour: 'The Park Camper',
+        user: 'Aman',
+    });
+});
+
+app.get('/overview', (req, res) => {
+    res.status(200).render('overview', {
+        title: 'All Tours',
+    });
+});
+
+app.get('/tour', (req, res) => {
+    res.status(200).render('tour', {
+        title: 'The Park Camper Tour',
+    });
+});
+
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/reviews', reviewRouter);
